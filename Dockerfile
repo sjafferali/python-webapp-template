@@ -103,7 +103,8 @@ RUN mkdir -p /app/logs /app/data && \
 ENV PYTHONPATH=/app \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PORT=8080
+    PORT=8080 \
+    WORKERS=2
 
 # Expose ports
 EXPOSE 8080

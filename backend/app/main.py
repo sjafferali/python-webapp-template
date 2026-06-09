@@ -62,8 +62,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include routers
-app.include_router(health_router, tags=["health"])
+# Include routers. Health lives under /api so it is reachable through the nginx
+# proxy (which forwards only /api/* to the backend) and matches the container
+# HEALTHCHECK.
+app.include_router(health_router, prefix="/api", tags=["health"])
 app.include_router(v1_router, prefix="/api/v1")
 
 
