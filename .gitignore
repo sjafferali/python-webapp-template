@@ -14,8 +14,8 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
+/lib/
+/lib64/
 parts/
 sdist/
 var/
@@ -225,3 +225,6 @@ docker-compose.override.yml
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# TypeScript incremental build state
+*.tsbuildinfo

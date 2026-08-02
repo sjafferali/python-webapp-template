@@ -172,7 +172,9 @@ if [ "$SKIP_TESTS" = false ] && [ "$FRONTEND_ONLY" = false ]; then
         print_success "Using SQLite for tests"
     fi
 
-    run_check "Backend tests with coverage" "poetry run pytest --cov=backend/app --cov-report=term"
+    # VIRTUAL_ENV is unset so poetry resolves the project's own environment
+    # rather than the activated CI tools venv.
+    run_check "Backend tests with coverage" "env -u VIRTUAL_ENV poetry run pytest --cov=backend/app --cov-report=term"
 
     if [ -n "$POSTGRES_CONTAINER" ]; then
         docker rm -f "$POSTGRES_CONTAINER" > /dev/null 2>&1
@@ -226,7 +228,9 @@ if [ "$SKIP_LINT" = false ] && [ "$FRONTEND_ONLY" = false ]; then
 
     # MyPy
     echo -e "\n${YELLOW}MyPy Type Checking${NC}"
-    run_check "MyPy" "poetry run mypy backend/app/ --ignore-missing-imports"
+    # VIRTUAL_ENV is unset so poetry resolves the project's own environment,
+    # where mypy sees the project's dependencies and their type information.
+    run_check "MyPy" "env -u VIRTUAL_ENV poetry run mypy backend/app/ --ignore-missing-imports"
 
     cd "$PROJECT_ROOT"
 fi

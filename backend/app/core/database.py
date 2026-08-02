@@ -9,14 +9,19 @@ from sqlalchemy.orm import declarative_base
 
 from app.config import settings
 
-# Create async engine
+_url = settings.database_url_async
+
+# SQLite (aiosqlite) uses a NullPool, which rejects connection-pool sizing arguments.
+_pool_kwargs: dict[str, int] = (
+    {} if _url.startswith("sqlite") else {"pool_size": 5, "max_overflow": 10}
+)
+
 engine = create_async_engine(
-    settings.database_url_async,
+    _url,
     echo=settings.DEBUG and not settings.TESTING,
     future=True,
     pool_pre_ping=True,
-    pool_size=5,
-    max_overflow=10,
+    **_pool_kwargs,
 )
 
 # Create async session factory
